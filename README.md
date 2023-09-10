@@ -158,7 +158,7 @@ phpinfo();
 ```
 The PHP page can be accessed from the browser using the domanin name or the public IP addressin the Nginx configuration file followed by `/info.php
 
-**`http://`18.232.74.244:80`/info.php`**
+**`http://18.232.74.244/info.php`**
 
 The image is shown below
 
