@@ -1,4 +1,4 @@
-# Documentation for AWS LEMP STACK IMPLEMENTATION
+# DOCUMENTATION FOR AWS LEMP STACK IMPLEMENTATION
 
 # WEB STACK IMPLEMENTATION (LEMP STACK) IN AWS
 
@@ -163,3 +163,80 @@ The PHP page can be accessed from the browser using the domanin name or the publ
 The image is shown below
 
 <img width="773" alt="image" src="https://github.com/kalkah/project-2/assets/95209274/9deed09b-eaad-4192-8754-f6f816f66e3e">
+
+### Retrieving Data from MYSQL Database with PHP
+
+I connect to the database using root account:
+
+**`sudo mysql -p`**
+
+A new database was created 
+
+**`CREATE DATABASE example_database;`**
+
+A new user granted with full priviledge to the example_database was created.
+
+<img width="447" alt="image" src="https://github.com/kalkah/project-2/assets/95209274/f4ec54d4-48af-48a4-aa69-da022b219146">
+
+**`CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'Password.1';`**
+
+The new user was granted to the example_database database
+
+**`GRANT ALL ON example_database.* TO 'example_user'@'%';`**
+
+I exit the myssql console and logging again to confirm the new user has the proper permission
+
+**`mysql -u example_user -p`** -p flag in the command will prompt for the password used when creating the exmaple_user
+
+logging into the database confirm my access to the database. 
+
+**`SHOW DATABSES`** command give the follwoing output
+
+<img width="206" alt="image" src="https://github.com/kalkah/project-2/assets/95209274/82f9aacc-d291-435c-bc3a-8a9fb4113bc3">
+
+A test table named todo_list was created using the command below
+
+**`CREATE TABLE example_database.todo_list (item_id INT AUTO_INCREMENT,content VARCHAR(255),PRIMARY KEY(item_id));`**
+
+Four rows were inserted into the table using the command below, it was repeated four times changing the values from first, second, third and fourth
+
+**`mysql> INSERT INTO example_database.todo_list (content) VALUES ("My first important item");`**
+
+The command below was run to confirm that data was successfuly saved into teh database
+
+**`mysql>  SELECT * FROM example_database.todo_list;`** The output is hown below
+
+<img width="553" alt="image" src="https://github.com/kalkah/project-2/assets/95209274/7f58583c-4ab3-4d05-b19e-ebeda39f0cad">
+
+A PHP script that connect to mysql database and queries for our content was created
+
+**`nano /var/www/projectLEMP/todo_list.php`**
+
+The PHP scripts below connect to the mysql database and queries for the content of todo_list table, display the result in a list.
+
+```
+<?php
+$user = "example_user";
+$password = "Password.1";
+$database = "example_database";
+$table = "todo_list";
+
+try {
+  $db = new PDO("mysql:host=localhost;dbname=$database", $user, $password);
+  echo "<h2>TODO</h2><ol>";
+  foreach($db->query("SELECT content FROM $table") as $row) {
+    echo "<li>" . $row['content'] . "</li>";
+  }
+  echo "</ol>";
+} catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+}
+```
+
+Todo_list table can be accessed from the web browser by visiting the domain name  or public IP address for the website followed by `/todo_list.php`
+
+#### http://18.232.74.244/todo_list.php ####
+
+<img width="679" alt="image" src="https://github.com/kalkah/project-2/assets/95209274/5be601c1-17e0-46e6-9fad-1d38222262ac">
+
